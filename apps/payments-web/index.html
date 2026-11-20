@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>Payments Lab</title>
+<h1>Payments Lab</h1>
+<form id="payment-form">
+  <label for="amount">Amount in paise</label>
+  <input id="amount" type="number" min="1" step="1" required>
+  <button>Add test payment</button>
+</form>
+<p id="status" role="status"></p>
+<h2>Test payments</h2>
+<ul id="payments"></ul>
+
+<script>
+const form = document.querySelector('#payment-form');
+const amount = document.querySelector('#amount');
+const status = document.querySelector('#status');
+const list = document.querySelector('#payments');
+
+async function request(options) {
+  const response = await fetch('/payments', options);
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.error);
+  return data;
+}
+
+async function refresh() {
+  const payments = await request();
+  list.replaceChildren();
+  for (const payment of payments) {
+    const row = document.createElement('li');
+    row.textContent = `${payment.amountPaise} paise (${payment.currency}) · ${payment.id}`;
+    list.append(row);
+  }
+}
+
+form.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  try {
+    const payment = await request({
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ amountPaise: amount.valueAsNumber })
+    });
+    status.textContent = `Created payment ${payment.id}`;
+    form.reset();
+    await refresh();
+  } catch (error) {
+    status.textContent = error.message;
+  }
+});
+
+refresh().catch(error => { status.textContent = error.message; });
+</script>
