@@ -8,6 +8,9 @@ spec:
     - name: shared-gateway
       namespace: platform-gateway
       sectionName: http
+    - name: shared-gateway
+      namespace: platform-gateway
+      sectionName: https
   hostnames:
     - payments.local
   rules:
@@ -29,6 +32,9 @@ spec:
     - name: shared-gateway
       namespace: platform-gateway
       sectionName: http
+    - name: shared-gateway
+      namespace: platform-gateway
+      sectionName: https
   hostnames:
     - reporting.local
   rules:

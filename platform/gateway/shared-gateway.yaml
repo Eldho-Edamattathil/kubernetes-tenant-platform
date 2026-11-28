@@ -22,3 +22,19 @@ spec:
               shared-gateway-access: "true"
         kinds:
           - kind: HTTPRoute
+    - name: https
+      protocol: HTTPS
+      port: 443
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            name: tenant-gateway-tls
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              shared-gateway-access: "true"
+        kinds:
+          - kind: HTTPRoute

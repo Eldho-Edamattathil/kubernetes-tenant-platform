@@ -1,0 +1,19 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: tenant-gateway-tls
+  namespace: platform-gateway
+spec:
+  secretName: tenant-gateway-tls
+  duration: 2160h
+  renewBefore: 360h
+  dnsNames:
+    - payments.local
+    - reporting.local
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+    rotationPolicy: Always
+  issuerRef:
+    name: platform-local-ca
+    kind: Issuer
